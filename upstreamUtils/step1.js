@@ -3,7 +3,7 @@ const child_process = require('child_process');
 const util = require('util');
 const fs = require('fs');
 
-function execAsync(cmd, callback) {
+let execAsync = (cmd, callback) => {
   const c = child_process.exec(cmd, callback);
 
   c.stdout.pipe(process.stdout);
@@ -15,10 +15,10 @@ function execAsync(cmd, callback) {
 const exec = util.promisify(execAsync);
 const readFile = util.promisify(fs.readFile);
 
-function realname(type, short) {
+let realname = (type, short) => {
   for (var i=0; i<=9999; i++) {
     for (const prefix of ['', '0', '00', '000']) {
-      const full = 'patches/'+type+'/'+prefix+i+"-"+short;
+      const full = 'patches/' + type + '/' + prefix + i + "-" + short;
       if (fs.existsSync(full)) {
         return full;
       }
@@ -27,7 +27,7 @@ function realname(type, short) {
   throw new Error(`patch not found type=${type} short=${short}`)
 }
 
-function parse(prop) {
+let parse = (prop) => {
   return new Map(prop.replace(/\r/g,"").split("\n").filter(line => line !== "").map(line => {
       const [key, value] = line.split("=");
       return [key, value];
